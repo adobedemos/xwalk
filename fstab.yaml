@@ -1,4 +1,2 @@
 mountpoints:
-  /:
-    url: https://main--xwalk--adobedemos.aem.live
-    host: www.xwalk.abrdns.com
+  /: https://main--xwalk--adobedemos.aem.live/
