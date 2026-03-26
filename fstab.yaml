@@ -1,6 +1,2 @@
 mountpoints:
-  /: 
-    url: https://author-p113202-e1287329.adobeaemcloud.com/bin/franklin.delivery/adobedemos/xwalk/main/
-    type: markup
-    host: www.xwalk.abrdns.com
-  /fstab.yaml: https://github.com/adobedemos/xwalk/blob/main/fstab.yaml
+  /content: https://author-p113202-e1287329.adobeaemcloud.com/bin/franklin.delivery/adobedemos/xwalk/main/
