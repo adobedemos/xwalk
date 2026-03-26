@@ -1,5 +1,8 @@
 mountpoints:
-  /:
+  /: 
+    url: https://main--xwalk--adobedemos.aem.live
+    host: www.xwalk.abrdns.com
+  /bin/franklin.delivery/adobedemos/xwalk/main:
     url: "https://author-p113202-e1287329.adobeaemcloud.com/bin/franklin.delivery/adobedemos/xwalk/main"
     type: "markup"
     suffix: ".html"
