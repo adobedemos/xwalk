@@ -1,8 +1,5 @@
 {
-  "cdn": {
-    "prod": {
-      "type": "managed",
-      "host": "www.xwalk.abrdns.com"
-    }
-  }
+  "cdn.prod.type": "managed",
+  "cdn.prod.host": "www.xwalk.abrdns.com",
+  "cdn.prod.envId": "p113202-e1287329"
 }
