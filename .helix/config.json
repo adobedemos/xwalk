@@ -1,0 +1,8 @@
+{
+  "cdn": {
+    "prod": {
+      "type": "managed",
+      "host": "www.xwalk.abrdns.com"
+    }
+  }
+}
