@@ -165,32 +165,48 @@ export default function decorate(block) {
     if (i === 0) slide.classList.add('is-active');
     moveInstrumentation(row, slide);
 
-    /* Split children into image vs content */
+    /* Separate image div(s) from content div(s) */
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'carousel-slide-content';
+
     [...row.children].forEach((div) => {
       if (div.children.length === 1 && div.querySelector('picture')) {
         div.className = 'carousel-slide-image';
+        slide.append(div);
       } else {
-        div.className = 'carousel-slide-content';
-        /* Wrap any CTA anchors (button-decorated links) in a cta container */
-        const ctaLinks = [...div.querySelectorAll('a.button, p > a:only-child, p:last-child > a')];
-        if (ctaLinks.length) {
-          const ctaEl = document.createElement('div');
-          ctaEl.className = 'carousel-slide-cta';
-          ctaLinks.forEach((a) => {
-            /* move the link's parent <p> contents or the link itself */
-            const parent = a.parentElement;
-            if (parent && parent.tagName === 'P' && parent.children.length === 1) {
-              ctaEl.append(a);
-              parent.remove();
-            } else {
-              ctaEl.append(a);
-            }
-          });
-          div.append(ctaEl);
+        /* Move all children of this div into the shared content wrapper */
+        while (div.firstChild) {
+          contentWrapper.append(div.firstChild);
         }
       }
-      slide.append(div);
     });
+
+    /* Wrap any CTA anchors (button-decorated links) in a cta container */
+    const ctaLinks = [
+      ...contentWrapper.querySelectorAll('a.button'),
+      ...([...contentWrapper.querySelectorAll('p')].filter((p) => {
+        const links = p.querySelectorAll('a');
+        return links.length === 1 && p.textContent.trim() === links[0].textContent.trim();
+      }).map((p) => p.querySelector('a'))),
+    ];
+    /* deduplicate */
+    const uniqueCtas = [...new Set(ctaLinks)];
+    if (uniqueCtas.length) {
+      const ctaEl = document.createElement('div');
+      ctaEl.className = 'carousel-slide-cta';
+      uniqueCtas.forEach((a) => {
+        const parent = a.parentElement;
+        if (parent && parent.tagName === 'P' && parent.textContent.trim() === a.textContent.trim()) {
+          ctaEl.append(a);
+          parent.remove();
+        } else {
+          ctaEl.append(a);
+        }
+      });
+      contentWrapper.append(ctaEl);
+    }
+
+    slide.append(contentWrapper);
 
     track.append(slide);
   });
