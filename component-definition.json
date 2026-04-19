@@ -118,11 +118,14 @@
           "plugins": {
             "xwalk": {
               "page": {
-                "resourceType": "core/franklin/components/block/v1/block",
+                "resourceType": "core/franklin/components/columns/v1/columns",
                 "template": {
-                  "name": "Carousel",
-                  "model": "carousel",
-                  "filter": "carousel"
+                  "autoplay": "false",
+                  "autoplayInterval": "5000",
+                  "loop": "true",
+                  "showArrows": "true",
+                  "showDots": "true",
+                  "pauseOnHover": "true"
                 }
               }
             }
