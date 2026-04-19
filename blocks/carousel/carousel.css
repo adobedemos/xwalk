@@ -1,0 +1,241 @@
+/* ============================================================
+   Carousel Block
+   ============================================================ */
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Full-bleed variant: remove section padding */
+.carousel-container .carousel-wrapper {
+  padding: 0;
+}
+
+/* ── Wrapper (holds track + nav buttons) ── */
+.carousel .carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  outline: none;
+}
+
+.carousel .carousel-wrapper:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* ── Track ── */
+.carousel .carousel-track {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  transition: transform 0.4s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel .carousel-track {
+    transition: none;
+  }
+}
+
+/* ── Slides ── */
+.carousel .carousel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+  background-color: var(--light-color);
+}
+
+/* Image area */
+.carousel .carousel-slide-image {
+  line-height: 0;
+  overflow: hidden;
+}
+
+.carousel .carousel-slide-image picture {
+  display: block;
+  width: 100%;
+}
+
+.carousel .carousel-slide-image img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content / text overlay */
+.carousel .carousel-slide-content {
+  padding: 24px;
+  background-color: var(--background-color);
+}
+
+.carousel .carousel-slide-content h1,
+.carousel .carousel-slide-content h2,
+.carousel .carousel-slide-content h3,
+.carousel .carousel-slide-content h4,
+.carousel .carousel-slide-content h5,
+.carousel .carousel-slide-content h6 {
+  font-family: var(--heading-font-family);
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+.carousel .carousel-slide-content p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  color: var(--dark-color);
+  margin-top: 0.6em;
+}
+
+.carousel .carousel-slide-content a.button {
+  margin-top: 16px;
+}
+
+/* ── Navigation buttons ── */
+.carousel .carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--link-color);
+  color: var(--background-color);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.carousel .carousel-nav-btn:hover,
+.carousel .carousel-nav-btn:focus-visible {
+  background-color: var(--link-hover-color);
+}
+
+.carousel .carousel-nav-btn:focus-visible {
+  outline: 2px solid var(--link-hover-color);
+  outline-offset: 2px;
+}
+
+.carousel .carousel-nav-prev {
+  left: 12px;
+}
+
+.carousel .carousel-nav-next {
+  right: 12px;
+}
+
+.carousel .carousel-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentcolor;
+  pointer-events: none;
+}
+
+/* ── Dots ── */
+.carousel .carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.carousel .carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--link-color);
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.carousel .carousel-dot.is-active {
+  background-color: var(--link-color);
+  transform: scale(1.25);
+}
+
+.carousel .carousel-dot:hover,
+.carousel .carousel-dot:focus-visible {
+  background-color: var(--link-hover-color);
+  border-color: var(--link-hover-color);
+}
+
+.carousel .carousel-dot:focus-visible {
+  outline: 2px solid var(--link-hover-color);
+  outline-offset: 2px;
+}
+
+/* ── Responsive: tablet & desktop ── */
+@media (width >= 600px) {
+  /* Side-by-side layout: image left, content right */
+  .carousel .carousel-slide {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: 320px;
+  }
+
+  .carousel .carousel-slide-image {
+    flex: 0 0 50%;
+  }
+
+  .carousel .carousel-slide-image img {
+    aspect-ratio: unset;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carousel .carousel-slide-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 40px;
+  }
+}
+
+@media (width >= 900px) {
+  .carousel .carousel-nav-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .carousel .carousel-nav-prev {
+    left: 16px;
+  }
+
+  .carousel .carousel-nav-next {
+    right: 16px;
+  }
+
+  .carousel .carousel-nav-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .carousel .carousel-slide-content {
+    padding: 40px 56px;
+  }
+
+  .carousel .carousel-slide {
+    min-height: 400px;
+  }
+}
+
+/* ── Full-bleed / light section variants ── */
+.carousel-container.carousel-wrapper {
+  max-width: unset;
+}
