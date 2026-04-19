@@ -12,7 +12,14 @@ header .nav-wrapper {
   z-index: 2;
   position: fixed;
   color: var(--header-nav-text);
-  background: pink;
+  background: linear-gradient(
+    118deg,
+    #1e40af 0%,
+    #3730a3 28%,
+    #6d28d9 52%,
+    #a21caf 76%,
+    #db2777 100%
+  );
   box-shadow:
     0 1px 0 rgb(255 255 255 / 12%),
     0 4px 24px rgb(15 23 42 / 12%);
