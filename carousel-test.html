@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carousel Block – Test</title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+    <link rel="stylesheet" href="/blocks/carousel/carousel.css" />
+    <style>
+      body { display: block; margin: 0; font-family: sans-serif; }
+      .page-title { text-align: center; margin: 32px 0 8px; color: #333; font-family: sans-serif; font-size: 20px; }
+      .section { margin: 40px 0; }
+      .section > div { max-width: 1200px; margin: auto; padding: 0 24px; }
+
+      /* Placeholder images via CSS when real images are missing */
+      .placeholder-img {
+        width: 100%;
+        height: 100%;
+        min-height: 240px;
+        display: block;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-title">Carousel Block – Visual Test (Desktop: image 68 % | content 32 %)</p>
+
+    <main>
+      <div class="section">
+        <div>
+          <div class="carousel block" data-block-name="carousel" data-block-status="loading">
+
+            <!-- Slide 1 -->
+            <div>
+              <div>
+                <picture>
+                  <img
+                    class="placeholder-img"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'%3E%3Crect width='1200' height='675' fill='%234a90d9'/%3E%3Ctext x='600' y='337' font-size='64' font-family='sans-serif' fill='white' text-anchor='middle' dominant-baseline='middle'%3E🏔 Mountain%3C/text%3E%3C/svg%3E"
+                    alt="Mountain landscape"
+                    width="1200"
+                    height="675"
+                  />
+                </picture>
+              </div>
+              <div>
+                <h2>Discover the Mountains</h2>
+                <p>Explore breathtaking peaks and pristine alpine lakes. Your next great adventure is just around the corner — pack your bags and set off into the wild.</p>
+                <p><a href="#learn-more">Learn More</a></p>
+              </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div>
+              <div>
+                <picture>
+                  <img
+                    class="placeholder-img"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'%3E%3Crect width='1200' height='675' fill='%2322b5a0'/%3E%3Ctext x='600' y='337' font-size='64' font-family='sans-serif' fill='white' text-anchor='middle' dominant-baseline='middle'%3E🏖 Beach%3C/text%3E%3C/svg%3E"
+                    alt="Tropical beach"
+                    width="1200"
+                    height="675"
+                    loading="lazy"
+                  />
+                </picture>
+              </div>
+              <div>
+                <h2>Relax on the Beach</h2>
+                <p>Sun, sand and crystal-clear water await. Whether you want to surf the waves or unwind under a palm tree, paradise is calling your name.</p>
+                <p><a href="#book-now">Book Now</a></p>
+              </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div>
+              <div>
+                <picture>
+                  <img
+                    class="placeholder-img"
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='675'%3E%3Crect width='1200' height='675' fill='%23505050'/%3E%3Ctext x='600' y='337' font-size='64' font-family='sans-serif' fill='white' text-anchor='middle' dominant-baseline='middle'%3E🌃 City%3C/text%3E%3C/svg%3E"
+                    alt="City skyline at night"
+                    width="1200"
+                    height="675"
+                    loading="lazy"
+                  />
+                </picture>
+              </div>
+              <div>
+                <h2>Explore the City</h2>
+                <p>Vibrant nightlife, world-class cuisine, and iconic landmarks. The city never sleeps — and neither will you once you experience its magic first-hand.</p>
+                <p><a href="#explore">Explore Now</a></p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script type="module">
+      import decorate from '/blocks/carousel/carousel.js';
+
+      document.querySelectorAll('.carousel.block').forEach(async (block) => {
+        await decorate(block);
+        block.dataset.blockStatus = 'loaded';
+      });
+    </script>
+  </body>
+</html>

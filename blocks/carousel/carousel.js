@@ -171,6 +171,23 @@ export default function decorate(block) {
         div.className = 'carousel-slide-image';
       } else {
         div.className = 'carousel-slide-content';
+        /* Wrap any CTA anchors (button-decorated links) in a cta container */
+        const ctaLinks = [...div.querySelectorAll('a.button, p > a:only-child, p:last-child > a')];
+        if (ctaLinks.length) {
+          const ctaEl = document.createElement('div');
+          ctaEl.className = 'carousel-slide-cta';
+          ctaLinks.forEach((a) => {
+            /* move the link's parent <p> contents or the link itself */
+            const parent = a.parentElement;
+            if (parent && parent.tagName === 'P' && parent.children.length === 1) {
+              ctaEl.append(a);
+              parent.remove();
+            } else {
+              ctaEl.append(a);
+            }
+          });
+          div.append(ctaEl);
+        }
       }
       slide.append(div);
     });
