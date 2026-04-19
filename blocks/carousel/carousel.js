@@ -1,7 +1,7 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
-const AUTOPLAY_INTERVAL = 5000;
+const DEFAULT_AUTOPLAY_INTERVAL = 5000;
 
 /**
  * Creates an SVG arrow icon element.
@@ -89,8 +89,10 @@ function goToSlide(track, dotsEl, index) {
  * Initialises autoplay and returns a controller object.
  * @param {Function} advance function that advances to the next slide
  * @param {HTMLElement} container outer carousel element
+ * @param {number} interval milliseconds between transitions
+ * @param {boolean} pauseOnHover whether to pause when hovered/focused
  */
-function initAutoplay(advance, container) {
+function initAutoplay(advance, container, interval = DEFAULT_AUTOPLAY_INTERVAL, pauseOnHover = true) {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return null;
 
@@ -98,7 +100,7 @@ function initAutoplay(advance, container) {
 
   const start = () => {
     if (timer) return;
-    timer = setInterval(advance, AUTOPLAY_INTERVAL);
+    timer = setInterval(advance, interval);
   };
 
   const stop = () => {
@@ -106,10 +108,12 @@ function initAutoplay(advance, container) {
     timer = null;
   };
 
-  container.addEventListener('mouseenter', stop);
-  container.addEventListener('mouseleave', start);
-  container.addEventListener('focusin', stop);
-  container.addEventListener('focusout', start);
+  if (pauseOnHover) {
+    container.addEventListener('mouseenter', stop);
+    container.addEventListener('mouseleave', start);
+    container.addEventListener('focusin', stop);
+    container.addEventListener('focusout', start);
+  }
 
   start();
   return { start, stop };
@@ -145,11 +149,39 @@ function initTouch(track, prev, next) {
 }
 
 /**
+ * Reads block-level config authored via the Universal Editor model.
+ * AEM Edge Delivery Services serialises model fields as data-* attributes on the block element.
+ * @param {HTMLElement} block
+ * @returns {{ autoplay: boolean, autoplayInterval: number, loop: boolean, showArrows: boolean, showDots: boolean, pauseOnHover: boolean }}
+ */
+function readConfig(block) {
+  const bool = (attr, fallback) => {
+    const val = block.dataset[attr];
+    if (val === undefined || val === '') return fallback;
+    return val !== 'false' && val !== '0';
+  };
+  const num = (attr, fallback) => {
+    const val = parseInt(block.dataset[attr], 10);
+    return Number.isFinite(val) && val > 0 ? val : fallback;
+  };
+
+  return {
+    /* Also respect the legacy CSS-class-based approach ("autoplay" modifier class) */
+    autoplay: bool('autoplay', block.classList.contains('autoplay')),
+    autoplayInterval: num('autoplayInterval', DEFAULT_AUTOPLAY_INTERVAL),
+    loop: bool('loop', true),
+    showArrows: bool('showArrows', true),
+    showDots: bool('showDots', true),
+    pauseOnHover: bool('pauseOnHover', true),
+  };
+}
+
+/**
  * Decorates the carousel block.
  * @param {HTMLElement} block
  */
 export default function decorate(block) {
-  const hasAutoplay = block.classList.contains('autoplay');
+  const config = readConfig(block);
 
   /* ── Build slide list ──────────────────────────────────────────── */
   const track = document.createElement('ul');
@@ -226,19 +258,19 @@ export default function decorate(block) {
   block.style.setProperty('--carousel-slide-count', total);
 
   /* ── Navigation buttons ────────────────────────────────────────── */
-  const prevBtn = createArrowButton('prev');
-  const nextBtn = createArrowButton('next');
+  const prevBtn = config.showArrows ? createArrowButton('prev') : null;
+  const nextBtn = config.showArrows ? createArrowButton('next') : null;
 
   /* ── Dots ──────────────────────────────────────────────────────── */
-  const dotsEl = total > 1 ? createDots(total) : null;
+  const dotsEl = (total > 1 && config.showDots) ? createDots(total) : null;
 
   /* ── Navigation helpers ────────────────────────────────────────── */
   const current = () => parseInt(track.dataset.current, 10);
   const advance = () => goToSlide(track, dotsEl, current() + 1);
   const retreat = () => goToSlide(track, dotsEl, current() - 1);
 
-  prevBtn.addEventListener('click', retreat);
-  nextBtn.addEventListener('click', advance);
+  if (prevBtn) prevBtn.addEventListener('click', retreat);
+  if (nextBtn) nextBtn.addEventListener('click', advance);
 
   if (dotsEl) {
     dotsEl.querySelectorAll('.carousel-dot').forEach((dot) => {
@@ -257,12 +289,15 @@ export default function decorate(block) {
   initTouch(track, retreat, advance);
 
   /* ── Autoplay ──────────────────────────────────────────────────── */
-  if (hasAutoplay && total > 1) {
-    initAutoplay(advance, wrapper);
+  if (config.autoplay && total > 1) {
+    initAutoplay(advance, wrapper, config.autoplayInterval, config.pauseOnHover);
   }
 
   /* ── Assemble ──────────────────────────────────────────────────── */
-  wrapper.append(prevBtn, track, nextBtn);
+  const wrapperChildren = [track];
+  if (prevBtn) wrapperChildren.unshift(prevBtn);
+  if (nextBtn) wrapperChildren.push(nextBtn);
+  wrapper.append(...wrapperChildren);
   block.replaceChildren(wrapper);
   if (dotsEl) block.append(dotsEl);
 }

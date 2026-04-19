@@ -216,6 +216,54 @@
     ]
   },
   {
+    "id": "carousel",
+    "fields": [
+      {
+        "component": "boolean",
+        "name": "autoplay",
+        "label": "Auto-play",
+        "value": false,
+        "description": "Automatically advance slides"
+      },
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "autoplayInterval",
+        "label": "Auto-play Interval (ms)",
+        "value": "5000",
+        "description": "Time in milliseconds between slide transitions (e.g. 5000 = 5 s)"
+      },
+      {
+        "component": "boolean",
+        "name": "loop",
+        "label": "Loop",
+        "value": true,
+        "description": "Loop back to the first slide after the last"
+      },
+      {
+        "component": "boolean",
+        "name": "showArrows",
+        "label": "Show Navigation Arrows",
+        "value": true,
+        "description": "Display previous / next arrow buttons"
+      },
+      {
+        "component": "boolean",
+        "name": "showDots",
+        "label": "Show Dot Indicators",
+        "value": true,
+        "description": "Display the slide position dot indicators"
+      },
+      {
+        "component": "boolean",
+        "name": "pauseOnHover",
+        "label": "Pause on Hover",
+        "value": true,
+        "description": "Pause auto-play when the user hovers over the carousel"
+      }
+    ]
+  },
+  {
     "id": "carousel-slide",
     "fields": [
       {
