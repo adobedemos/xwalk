@@ -10,7 +10,13 @@
             "template": {
               "name": "Carousel",
               "model": "carousel",
-              "filter": "carousel"
+              "filter": "carousel",
+              "autoplay": "false",
+              "autoplayInterval": "5000",
+              "loop": "true",
+              "showArrows": "true",
+              "showDots": "true",
+              "pauseOnHover": "true"
             }
           }
         }
@@ -37,11 +43,15 @@
       "id": "carousel",
       "fields": [
         {
-          "component": "boolean",
+          "component": "select",
           "name": "autoplay",
           "label": "Auto-play",
-          "value": false,
-          "description": "Automatically advance slides"
+          "value": "false",
+          "description": "Automatically advance slides",
+          "options": [
+            { "name": "Off", "value": "false" },
+            { "name": "On", "value": "true" }
+          ]
         },
         {
           "component": "text",
@@ -52,32 +62,48 @@
           "description": "Time in milliseconds between slide transitions (e.g. 5000 = 5 s)"
         },
         {
-          "component": "boolean",
+          "component": "select",
           "name": "loop",
-          "label": "Loop",
-          "value": true,
-          "description": "Loop back to the first slide after the last"
+          "label": "Loop Slides",
+          "value": "true",
+          "description": "Loop back to the first slide after the last",
+          "options": [
+            { "name": "On", "value": "true" },
+            { "name": "Off", "value": "false" }
+          ]
         },
         {
-          "component": "boolean",
+          "component": "select",
           "name": "showArrows",
           "label": "Show Navigation Arrows",
-          "value": true,
-          "description": "Display previous / next arrow buttons"
+          "value": "true",
+          "description": "Display previous / next arrow buttons",
+          "options": [
+            { "name": "Show", "value": "true" },
+            { "name": "Hide", "value": "false" }
+          ]
         },
         {
-          "component": "boolean",
+          "component": "select",
           "name": "showDots",
           "label": "Show Dot Indicators",
-          "value": true,
-          "description": "Display the slide position dot indicators"
+          "value": "true",
+          "description": "Display the slide position dot indicators",
+          "options": [
+            { "name": "Show", "value": "true" },
+            { "name": "Hide", "value": "false" }
+          ]
         },
         {
-          "component": "boolean",
+          "component": "select",
           "name": "pauseOnHover",
           "label": "Pause on Hover",
-          "value": true,
-          "description": "Pause auto-play when the user hovers over the carousel"
+          "value": "true",
+          "description": "Pause auto-play when the user hovers over the carousel",
+          "options": [
+            { "name": "On", "value": "true" },
+            { "name": "Off", "value": "false" }
+          ]
         }
       ]
     },
