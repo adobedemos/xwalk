@@ -8,7 +8,8 @@ import {
   decorateTemplateAndTheme,
   waitForFirstImage,
   loadSection,
-  loadSections,
+  loadBelowFoldBlocks,
+  sampleRUM,
   loadCSS,
 } from './aem.js';
 
@@ -114,14 +115,26 @@ async function loadEager(doc) {
  * @param {Element} doc The container element
  */
 async function loadLazy(doc) {
+  if (sampleRUM.enhance) {
+    sampleRUM.enhance();
+  }
   loadHeader(doc.querySelector('header'));
 
-  const main = doc.querySelector('main');
-  await loadSections(main);
-
   const { hash } = window.location;
-  const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) element.scrollIntoView();
+  const hashElement = hash ? doc.getElementById(hash.substring(1)) : null;
+  const main = doc.querySelector('main');
+  if (main) {
+    if (hashElement) {
+      const targetSection = hashElement.closest('div.section');
+      if (targetSection) {
+        await loadSection(targetSection);
+      }
+    }
+    loadBelowFoldBlocks(main);
+  }
+  if (hash && hashElement) {
+    hashElement.scrollIntoView();
+  }
 
   loadFooter(doc.querySelector('footer'));
 

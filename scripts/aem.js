@@ -514,7 +514,6 @@ function decorateSections(main) {
     wrappers.forEach((wrapper) => section.append(wrapper));
     section.classList.add('section');
     section.dataset.sectionStatus = 'initialized';
-    section.style.display = 'none';
 
     // Process section metadata
     const sectionMeta = section.querySelector('div.section-metadata');
@@ -605,6 +604,64 @@ async function loadBlock(block) {
 }
 
 /**
+ * Pixels to prefetch below/above the viewport (below-fold block loading only).
+ * @type {string}
+ */
+const BELOW_FOLD_IO_ROOT_MARGIN = '0px 0px 200px 0px';
+
+/**
+ * Sets section to loaded when all blocks in that section are loaded (lazy IO path only).
+ * @param {Element | null} section
+ */
+function completeSectionIfAllBlocksLoaded(section) {
+  if (!section) return;
+  const blocks = section.querySelectorAll('div.block');
+  if (blocks.length === 0) {
+    section.dataset.sectionStatus = 'loaded';
+    return;
+  }
+  if ([...blocks].every((b) => b.dataset.blockStatus === 'loaded')) {
+    section.dataset.sectionStatus = 'loaded';
+  }
+}
+
+/**
+ * Loads block JS/CSS with IntersectionObserver for blocks not in the first `main` section.
+ * The first section must already be loaded (e.g. from `loadEager`).
+ * @param {Element | null} main
+ */
+function loadBelowFoldBlocks(main) {
+  if (!main) return;
+  const first = main.querySelector('div.section');
+  const toObserve = [...main.querySelectorAll('div.block[data-block-status="initialized"]')].filter(
+    (block) => !first || !first.contains(block),
+  );
+  if (toObserve.length === 0) return;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const block = entry.target;
+        observer.unobserve(block);
+        const section = block.closest('div.section');
+        if (section && section.dataset.sectionStatus === 'initialized') {
+          section.dataset.sectionStatus = 'loading';
+        }
+        (async () => {
+          try {
+            await loadBlock(block);
+          } finally {
+            completeSectionIfAllBlocksLoaded(section);
+          }
+        })();
+      });
+    },
+    { rootMargin: BELOW_FOLD_IO_ROOT_MARGIN, threshold: 0 },
+  );
+  toObserve.forEach((block) => observer.observe(block));
+}
+
+/**
  * Decorates a block.
  * @param {Element} block The block element
  */
@@ -689,23 +746,20 @@ async function loadSection(section, loadCallback) {
     }
     if (loadCallback) await loadCallback(section);
     section.dataset.sectionStatus = 'loaded';
-    section.style.display = null;
   }
 }
 
 /**
- * Loads all sections.
+ * Eagerly loads every block in every section, in order. Use for Universal Editor, fragments,
+ * and any case where all blocks must be materialized. For public `main` pages, prefer
+ * `loadEager` + `loadBelowFoldBlocks` in `loadLazy` instead of this.
  * @param {Element} element The parent element of sections to load
  */
-
 async function loadSections(element) {
   const sections = [...element.querySelectorAll('div.section')];
   for (let i = 0; i < sections.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
     await loadSection(sections[i]);
-    if (i === 0 && sampleRUM.enhance) {
-      sampleRUM.enhance();
-    }
   }
 }
 
@@ -722,6 +776,7 @@ export {
   decorateTemplateAndTheme,
   getMetadata,
   loadBlock,
+  loadBelowFoldBlocks,
   loadCSS,
   loadFooter,
   loadHeader,
