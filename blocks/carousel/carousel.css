@@ -5,6 +5,13 @@
 .carousel {
   position: relative;
   overflow: hidden;
+  min-height: 200px;
+}
+
+@media (width >= 600px) {
+  .carousel {
+    min-height: 380px;
+  }
 }
 
 /* Full-bleed variant: remove section padding */

@@ -245,7 +245,10 @@ export default function decorate(block) {
 
   /* ── Optimise images ───────────────────────────────────────────── */
   track.querySelectorAll('picture > img').forEach((img) => {
-    const optimized = createOptimizedPicture(img.src, img.alt, false, [{ width: '1200' }]);
+    const optimized = createOptimizedPicture(img.src, img.alt, false, [{ width: '1200' }], {
+      width: img.getAttribute('width'),
+      height: img.getAttribute('height'),
+    });
     moveInstrumentation(img, optimized.querySelector('img'));
     img.closest('picture').replaceWith(optimized);
   });
